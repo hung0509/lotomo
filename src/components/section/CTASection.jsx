@@ -1,11 +1,26 @@
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import ProductCard from "./ProductCard";
 
 const container = {
   hidden: {},
   show: {
     transition: {
       staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariant = {
+  hidden: {
+    opacity: 0,
+    y: -60,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
     },
   },
 };
@@ -25,6 +40,26 @@ const item = {
   },
 };
 
+const items = [
+  {
+    title: "Matcha Latte",
+    price: "55.000đ",
+    description: "Matcha Uji nguyên chất kết hợp sữa tươi béo ngậy",
+    badge: "Bán chạy",
+  },
+  {
+    title: "Trà Sữa Matcha Trân Châu",
+    price: "59.000đ",
+    description: "Matcha latte với trân châu đường đen tự làm",
+    badge: "Đặc biệt",
+  },
+  {
+    title: "Hojicha Latte",
+    price: "55.000đ",
+    description: "Trà rang Hojicha thơm nồng với sữa tươi",
+  },
+];
+
 export default function CTASection() {
   return (
     <motion.section
@@ -32,45 +67,56 @@ export default function CTASection() {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.3 }}
-      className="bg-[#f5f5f5] py-28 px-6 text-center relative"
-       style={{
-        backgroundColor: "#f5f5f5",
+      className="bg-[#f5f0e8] py-28 px-6 text-center relative"
+      style={{
+        backgroundColor: "#f5f0e8",
         backgroundImage: "radial-gradient(#d4d4d4 1px, transparent 1px)",
         backgroundSize: "18px 18px",
       }}
     >
       <div className="max-w-4xl mx-auto">
-
+        <motion.div
+          variants={item}
+          className="font-bold text-[#04a04d]  mb-6 font-itim"
+        >
+          Thực đơn
+        </motion.div>
         <motion.h2
           variants={item}
-          className="text-4xl md:text-5xl font-bold text-gray-800 mb-6"
+          className="text-4xl md:text-5xl font-bold text-[#04a04d]  mb-6 font-itim"
         >
-          Sẵn sàng bắt đầu dự án của bạn?
+          Tinh Hoa Matcha
         </motion.h2>
 
         <motion.p
           variants={item}
-          className="text-gray-600 text-lg leading-relaxed mb-10"
+          className="font-bold mb-6 font-itim"
         >
-          Liên hệ với chúng tôi ngay hôm nay để tư vấn miễn phí về dự án kiến
-          trúc của bạn. Đội ngũ chuyên gia của chúng tôi sẵn sàng giúp bạn.
+          <p className="opacity-45">Mỗi món nước được pha chế thủ công từ nguyên liệu tươi, mang đến hương vị chân thực nhất</p>
         </motion.p>
 
         <motion.div
           variants={item}
-          className="flex flex-col sm:flex-row justify-center gap-6"
+          className="text-gray-700 text-lg leading-relaxed space-y-6 font-itim"
         >
-          <button className="bg-[#c5a47e] text-white px-8 py-4 rounded-lg flex items-center gap-3 hover:scale-105 transition">
-            Liên hệ ngay
-            <ArrowRight size={18} />
-          </button>
-
-          <button className="border border-gray-400 px-8 py-4 rounded-lg flex items-center gap-3 hover:bg-gray-200 transition">
-            Xem portfolio
-            <ArrowRight size={18} />
-          </button>
+          <div className="w-20 border-t-2 border-[#04a04d] mx-auto mt-4"> </div>
         </motion.div>
 
+        <motion.div
+        initial="hidden"
+        animate="show"
+        variants={container}
+        className="grid md:grid-cols-3 gap-8 mt-8"
+      >
+        {items.map((item, index) => (
+          <motion.div
+            key={index}
+            variants={itemVariant}
+          >
+            <ProductCard {...item} />
+          </motion.div>
+        ))}
+      </motion.div>
       </div>
     </motion.section>
   );

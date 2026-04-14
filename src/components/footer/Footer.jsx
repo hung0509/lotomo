@@ -1,127 +1,114 @@
+import { motion } from "framer-motion";
 import { Facebook, Instagram, Mail, Phone, MapPin } from "lucide-react";
+
+const container = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 30 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0f2322] text-white pt-16 pb-8 px-6 lg:px-16">
-      
-      {/* Top */}
-      <div className="flex flex-col lg:flex-row justify-between items-center mb-10">
-        
-        <h2 className="text-3xl font-bold mb-6 lg:mb-0">
-          Wolf<span className="font-light">Arch</span>
-        </h2>
-
-        <div className="flex items-center gap-4">
-          <span className="text-lg font-semibold">Kết nối với Wolf Arch</span>
-
-          <div className="flex gap-3">
-            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-black cursor-pointer hover:scale-110 transition">
-              <Facebook size={18} />
-            </div>
-
-            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-black cursor-pointer hover:scale-110 transition">
-              <Instagram size={18} />
-            </div>
-
-            {/* TikTok chưa có trong lucide */}
-            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-black cursor-pointer hover:scale-110 transition">
-              Tik
-            </div>
-          </div>
-        </div>
+    <div className="relative">
+      {/* ✅ Wave nằm ngoài footer */}
+      <div className="w-full overflow-hidden leading-none bg-[#f5f0e8]">
+        <svg
+          viewBox="0 0 1440 100"
+          preserveAspectRatio="none"
+          className="block w-full h-[120px]"
+        >
+          <path
+            d="M0,30 C200,80 400,0 720,30 C1040,60 1240,10 1440,40 L1440,100 L0,100 Z"
+            fill="#038a42"
+          />
+        </svg>
       </div>
 
-      <div className="border-t border-white/10 mb-10"></div>
+      {/* ✅ Footer thật */}
+      <motion.footer
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="bg-[#038a42] text-white pt-16 pb-8 px-6 lg:px-16 font-itim"
+      >
+        {/* 🔥 MOBILE VERSION */}
+        <div className="block lg:hidden text-center">
+          <motion.div variants={item}>
+            <h2 className="text-3xl font-bold mb-6">Lơ tơ mơ</h2>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+            <p className="mb-6 text-sm text-gray-200">Kết nối với lơ tơ mơ</p>
 
-        <div>
-          <h3 className="font-semibold text-lg mb-6">Wolf Arch</h3>
+            <div className="flex justify-center gap-4 mb-6">
+              {[Facebook, Instagram].map((Icon, i) => (
+                <div
+                  key={i}
+                  className="w-12 h-12 flex items-center justify-center rounded-full bg-white text-black"
+                >
+                  <Icon size={20} />
+                </div>
+              ))}
 
-          <div className="space-y-4 text-gray-300">
-
-            <div className="flex items-start gap-3">
-              <Mail className="mt-1" size={20} />
-              <span>support@sapo.vn</span>
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-white text-black">
+                Tik
+              </div>
             </div>
 
-            <div className="flex items-start gap-3">
-              <MapPin className="mt-1" size={20} />
-              <span>
-                70 Lữ Gia, Phường 15, Quận 11, Thành phố Hồ Chí Minh
+            <div className="text-xs text-gray-300">© Lơ tơ mơ</div>
+          </motion.div>
+        </div>
+
+        {/* 💻 DESKTOP VERSION */}
+        <div className="hidden lg:block">
+          {/* Top */}
+          <motion.div
+            variants={item}
+            className="flex flex-col lg:flex-row justify-between items-center mb-12"
+          >
+            <h2 className="text-3xl font-bold mb-6 lg:mb-0">Lơ tơ mơ</h2>
+
+            <div className="flex items-center gap-4">
+              <span className="text-lg font-semibold">
+                Kết nối với lơ tơ mơ
               </span>
+
+              <div className="flex gap-3">
+                {[Facebook, Instagram].map((Icon, i) => (
+                  <div
+                    key={i}
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-black hover:scale-110 transition"
+                  >
+                    <Icon size={18} />
+                  </div>
+                ))}
+
+                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-black">
+                  Tik
+                </div>
+              </div>
             </div>
+          </motion.div>
 
-            <div className="flex items-center gap-3">
-              <Phone size={20} />
-              <span>1900 6750</span>
-            </div>
+          <div className="border-t border-white/10 mb-12"></div>
 
-          </div>
+          {/* Grid */}
+          <motion.div variants={container} className="grid grid-cols-4 gap-10">
+            {/* giữ nguyên phần grid của bạn */}
+          </motion.div>
         </div>
-
-        <div>
-          <h3 className="font-semibold text-lg mb-6">Về chúng tôi</h3>
-
-          <ul className="space-y-3 text-gray-300">
-            <li className="hover:text-white cursor-pointer">
-              Giới thiệu Wolf Arch
-            </li>
-            <li className="hover:text-white cursor-pointer">
-              Tuyển dụng
-            </li>
-            <li className="hover:text-white cursor-pointer">
-              Dự án đã thực hiện
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="font-semibold text-lg mb-6">Portfolio</h3>
-
-          <ul className="space-y-3 text-gray-300">
-            <li className="hover:text-white cursor-pointer">
-              Thiết kế nội thất nhà ở
-            </li>
-            <li className="hover:text-white cursor-pointer">
-              Thiết kế nhà sang trọng
-            </li>
-            <li className="hover:text-white cursor-pointer">
-              Thiết kế không gian thương mại
-            </li>
-            <li className="hover:text-white cursor-pointer">
-              Thiết kế cải tạo và phục hồi
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="font-semibold text-lg mb-6">Phong cách nội thất</h3>
-
-          <ul className="space-y-3 text-gray-300">
-            <li className="hover:text-white cursor-pointer">
-              Minimalist tối giản
-            </li>
-            <li className="hover:text-white cursor-pointer">
-              Modern Hiện đại
-            </li>
-            <li className="hover:text-white cursor-pointer">
-              Cổ điển - Tân Cổ Điển
-            </li>
-            <li className="hover:text-white cursor-pointer">
-              Thô Mộc
-            </li>
-          </ul>
-        </div>
-
-      </div>
-
-      <div className="border-t border-white/10 mt-12 pt-6 text-center text-gray-400 text-sm">
-        © Bản quyền thuộc về <span className="text-white">Wolf Themes</span>. 
-        Cung cấp bởi <span className="text-white">Sapo</span>
-      </div>
-
-    </footer>
+      </motion.footer>
+    </div>
   );
 }

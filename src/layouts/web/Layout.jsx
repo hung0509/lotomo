@@ -6,7 +6,6 @@ export default function Layout() {
   return (
     <main className="">
         <Outlet /> {/* ⚠️ nơi render route con */}
-        <Footer />
     </main>
   );
 }
