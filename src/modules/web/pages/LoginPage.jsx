@@ -10,34 +10,34 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { login, error } = useAuth();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (username && password) {
-      login({username: username, password: password})
-      navigate("/select-role");
+      try {
+        await login({
+          username,
+          password,
+        });
+
+        navigate("/select-role"); 
+      } catch (error) {
+        alert("Sai tài khoản hoặc mật khẩu");
+      }
     } else {
       alert("Vui lòng nhập đầy đủ thông tin");
     }
   };
-
-
   return (
     <div className="min-h-screen bg-[#038a42] flex justify-center items-center">
       {/* 📱 Mobile Frame */}
       <div className="w-full max-w-[420px] bg-white min-h-screen rounded-[30px] shadow-2xl overflow-hidden flex flex-col justify-center px-6">
-
         {/* Logo */}
         <div className="text-center mb-10">
-          <h1 className="text-2xl font-bold text-[#038a42]">
-            🍵 Lơ tơ mơ
-          </h1>
-          <p className="text-gray-500 text-sm mt-2">
-            Đăng nhập để tiếp tục
-          </p>
+          <h1 className="text-2xl font-bold text-[#038a42]">🍵 Lơ tơ mơ</h1>
+          <p className="text-gray-500 text-sm mt-2">Đăng nhập để tiếp tục</p>
         </div>
 
         {/* Form */}
         <div className="space-y-5">
-
           {/* Email */}
           <div className="flex items-center bg-gray-100 rounded-xl px-3 py-3 focus-within:ring-2 focus-within:ring-[#038a42]">
             <Mail className="w-5 h-5 text-gray-400" />

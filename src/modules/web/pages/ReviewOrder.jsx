@@ -7,7 +7,7 @@ export default function ReviewOrder() {
   const [cart, setCart] = useState({});
   const navigate = useNavigate();
 
-  // 👉 Load cart
+  // Load cart
   useEffect(() => {
     const data = localStorage.getItem("cart");
     if (data) {
@@ -15,7 +15,7 @@ export default function ReviewOrder() {
     }
   }, []);
 
-  // 👉 Xóa món
+  // Xóa món
   const removeItem = (key) => {
     setCart((prev) => {
       const updated = { ...prev };
@@ -26,24 +26,27 @@ export default function ReviewOrder() {
     });
   };
 
-  // 👉 Tăng giảm số lượng
+  // Tăng giảm số lượng
   const updateQty = (key, type) => {
     setCart((prev) => {
       const updated = { ...prev };
-
-      // nếu item không tồn tại thì bỏ qua
       if (!updated[key]) return prev;
 
-      const currentQty = updated[key].qty;
+      const item = updated[key];
 
       if (type === "inc") {
-        updated[key].qty = currentQty + 1;
+        item.qty += 1;
       } else {
-        if (currentQty <= 1) {
-          delete updated[key]; // chỉ xóa khi =1
+        if (item.qty <= 1) {
+          delete updated[key];
         } else {
-          updated[key].qty = currentQty - 1;
+          item.qty -= 1;
         }
+      }
+
+      // 👉 cập nhật lại total (KHÔNG đụng price)
+      if (updated[key]) {
+        item.total = item.price * item.qty;
       }
 
       localStorage.setItem("cart", JSON.stringify(updated));
@@ -53,17 +56,13 @@ export default function ReviewOrder() {
 
   const cartItems = Object.entries(cart);
 
-  // 👉 Tổng tiền
-  const totalPrice = cartItems.reduce((sum, [, item]) => {
-    const toppingPrice = (item.toppings || []).reduce(
-      (t, tp) => t + (tp?.price || 0),
-      0,
-    );
+  // ✅ Tổng tiền chuẩn
+  const totalPrice = cartItems.reduce(
+    (sum, [, item]) => sum + item.total,
+    0
+  );
 
-    return sum + (item.product.price + toppingPrice) * item.qty;
-  }, 0);
-
-  // 👉 Confirm
+  // Confirm
   const handleConfirm = () => {
     const orders = JSON.parse(localStorage.getItem("orders") || "[]");
 
@@ -76,7 +75,6 @@ export default function ReviewOrder() {
     orders.unshift(newOrder);
 
     localStorage.setItem("orders", JSON.stringify(orders));
-
     localStorage.removeItem("cart");
 
     navigate("/kitchen");
@@ -85,6 +83,7 @@ export default function ReviewOrder() {
   return (
     <div className="min-h-screen bg-[#038a42] flex justify-center py-6">
       <div className="w-full max-w-[420px] bg-white rounded-2xl shadow-lg p-4">
+
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <button
@@ -99,62 +98,56 @@ export default function ReviewOrder() {
 
         {/* List */}
         <div className="space-y-4">
-          {cartItems.map(([key, item]) => {
-            const toppingPrice = (item.toppings || []).reduce(
-              (t, tp) => t + (tp?.price || 0),
-              0,
-            );
+          {cartItems.map(([key, item]) => (
+            <div key={key} className="border-b pb-3">
 
-            return (
-              <div key={key} className="border-b pb-3">
-                {/* Name + price */}
-                <div className="flex justify-between items-center">
-                  <span className="font-semibold">{item.product.name}</span>
+              {/* Name + price */}
+              <div className="flex justify-between items-center">
+                <span className="font-semibold">
+                  {item.product.name}
+                </span>
 
-                  <span className="text-[#038a42] font-bold">
-                    {(item.product.price + toppingPrice).toLocaleString()}đ
-                  </span>
+                <span className="text-[#038a42] font-bold">
+                  {item.price.toLocaleString()}đ
+                </span>
+              </div>
+
+              {/* ✅ OPTIONS */}
+              {item.options?.length > 0 && (
+                <div className="text-xs text-gray-500 mt-1">
+                  + {item.options.map((o) => o.name).join(", ")}
                 </div>
+              )}
 
-                {/* Toppings */}
-                {item.toppings?.length > 0 && (
-                  <div className="text-xs text-gray-500 mt-1">
-                    + {item.toppings.map((t) => t.name).join(", ")}
-                  </div>
-                )}
-
-                {/* Qty + actions */}
-                <div className="flex justify-between items-center mt-2">
-                  {/* Quantity */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => updateQty(key, "dec")}
-                      className="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center"
-                    >
-                      <Minus size={14} />
-                    </button>
-
-                    <span className="font-semibold">{item.qty}</span>
-
-                    <button
-                      onClick={() => updateQty(key, "inc")}
-                      className="w-7 h-7 bg-[#038a42] text-white rounded-full flex items-center justify-center"
-                    >
-                      <Plus size={14} />
-                    </button>
-                  </div>
-
-                  {/* Remove */}
+              {/* Qty + actions */}
+              <div className="flex justify-between items-center mt-2">
+                <div className="flex items-center gap-2">
                   <button
-                    onClick={() => removeItem(key)}
-                    className="text-red-500 text-xs"
+                    onClick={() => updateQty(key, "dec")}
+                    className="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center"
                   >
-                    Xóa
+                    <Minus size={14} />
+                  </button>
+
+                  <span className="font-semibold">{item.qty}</span>
+
+                  <button
+                    onClick={() => updateQty(key, "inc")}
+                    className="w-7 h-7 bg-[#038a42] text-white rounded-full flex items-center justify-center"
+                  >
+                    <Plus size={14} />
                   </button>
                 </div>
+
+                <button
+                  onClick={() => removeItem(key)}
+                  className="text-red-500 text-xs"
+                >
+                  Xóa
+                </button>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
 
         {/* Total */}

@@ -10,7 +10,7 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("access_token");
     const isWhitelisted = AUTH_WHITELIST.some((path) =>
       config.url?.includes(path)
     );

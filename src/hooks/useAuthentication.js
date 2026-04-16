@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { authenticationApi } from "../services/authenticationApi";
-
-
+import { AuthenticationService } from "../services/authenticationService";
+import { loadingEmitter } from "../utils/LoadingEmitter";
 
 export const useAuth = () => {
   const [error, setError] = useState(null);
 
   const login = async (credentials) => {
     try {
-      const data = await authenticationApi.login(credentials);
-      localStorage.setItem("access_token", data.token);
+      const data = await AuthenticationService.login(credentials);
+      console.log(data);
+      localStorage.setItem("access_token", data.result.token);
       return data;
     } catch (err) {
       setError(err.message || "Login failed");
