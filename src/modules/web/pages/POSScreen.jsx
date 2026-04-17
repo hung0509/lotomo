@@ -98,7 +98,7 @@ export default function POSScreen() {
 
     setSelectedOptions((prev) => {
       if (group.type === "SINGLE") {
-        return {  
+        return {
           ...prev,
           [groupId]: item,
         };
@@ -298,9 +298,10 @@ export default function POSScreen() {
                     const selected = selectedOptions[group.id];
 
                     const isSelected =
-                      group.name === "Size"
+                      group.type === "SINGLE"
                         ? selected?.id === item.id
-                        : selected?.some((i) => i.id === item.id);
+                        : Array.isArray(selected) &&
+                          selected.some((i) => i.id === item.id);
 
                     return (
                       <div

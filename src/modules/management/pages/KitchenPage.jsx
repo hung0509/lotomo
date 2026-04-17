@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
 import { useOrder } from "../../../hooks/useOrder";
 import { initFirebaseAuth } from "../../../config/FirebaseAuth";
-import { onChildAdded, onValue, ref, off } from "firebase/database";
+import {
+  onChildAdded,
+  onValue,
+  ref,
+  off,
+  orderByChild,
+  startAt,
+  query,
+} from "firebase/database";
+import { useRef } from "react";
 import { db } from "../../../config/FirebaseConfig";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function KitchenPage() {
+  const startTimeRef = useRef(Date.now() - 10000);
   const [orders, setOrders] = useState([]);
   const { fectAllOrdersForToday, updateOrder } = useOrder();
   const navigate = useNavigate();
@@ -23,7 +34,7 @@ export default function KitchenPage() {
   });
 
   useEffect(() => {
-    let ordersRef;
+    let ordersRef = ref(db, "orders/recent");
 
     const init = async () => {
       // 1. LOAD DATA TỪ DB
@@ -38,17 +49,24 @@ export default function KitchenPage() {
       }
 
       await initFirebaseAuth(token);
+      // 3. SUBSCRIBE REALTIME (chỉ lấy order mới)
+      const ordersQuery = query(
+        ordersRef,
+        orderByChild("createdAt"),
+        startAt(startTimeRef.current),
+      );
 
-      // 3. SUBSCRIBE REALTIME
-      ordersRef = ref(db, "orders/recent");
-
-      //  listen order mới
-      onChildAdded(ordersRef, (snapshot) => {
+      onChildAdded(ordersQuery, (snapshot) => {
         const newOrder = snapshot.val();
-        console.log("Realtime order:", newOrder);
+
+        // lọc lần cuối (siêu an toàn)
+        if (newOrder.createdAt < startTimeRef.current) return;
+
+        toast.success(`Có đơn hàng ${newOrder.code} mới!!`, {
+          id: newOrder.orderId,
+        });
 
         setOrders((prev) => {
-          // chống duplicate
           const exists = prev.some((o) => o.orderId === newOrder.orderId);
           if (exists) return prev;
 
@@ -156,14 +174,15 @@ export default function KitchenPage() {
 
                 {/* Actions */}
                 <div className="flex gap-2">
-                  <button 
-                  onClick={async () => {
-                    await updateOrder({
-                      orderId: order.orderId,
-                      status: "CANCLED"
-                    })
-                  }}
-                  className="flex-1 bg-red-500 text-white py-2 rounded-xl text-sm font-semibold active:scale-95">
+                  <button
+                    onClick={async () => {
+                      await updateOrder({
+                        orderId: order.orderId,
+                        status: "CANCLED",
+                      });
+                    }}
+                    className="flex-1 bg-red-500 text-white py-2 rounded-xl text-sm font-semibold active:scale-95"
+                  >
                     Hủy đơn
                   </button>
 
@@ -173,7 +192,7 @@ export default function KitchenPage() {
                         "current_order",
                         JSON.stringify(order),
                       );
-                      navigate("/admin/order", {state: order});
+                      navigate("/admin/order", { state: order });
                     }}
                     className="flex-1 bg-[#038a42] text-white py-2 rounded-xl text-sm font-semibold active:scale-95"
                   >

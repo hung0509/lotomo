@@ -4,30 +4,29 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { useProduct } from "../../../hooks/useProduct";
+import { useOptionGroup } from "../../../hooks/useOptionGroup";
 
-const mockData = [
-  {
-    id: 1,
-    name: "Size",
-    items: [
-      { id: 1, name: "M", price: 0 },
-      { id: 2, name: "L", price: 5000 },
-    ],
-  },
-  {
-    id: 2,
-    name: "Topping",
-    items: [
-      { id: 3, name: "Trân châu", price: 5000 },
-      { id: 4, name: "Kem cheese", price: 7000 },
-    ],
-  },
-];
+// const mockData = [
+//   {
+//     id: 1,
+//     name: "Size",
+//     items: [
+//       { id: 1, name: "M", price: 0 },
+//       { id: 2, name: "L", price: 5000 },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     name: "Topping",
+//     items: [
+//       { id: 3, name: "Trân châu", price: 5000 },
+//       { id: 4, name: "Kem cheese", price: 7000 },
+//     ],
+//   },
+// ];
 
 const mockCategories = [
-  { id: 1, name: "Matcha" },
-  { id: 2, name: "Trà sữa" },
-  { id: 3, name: "Đá xay" },
+  { id: 1000000, name: "Matcha" }
 ];
 
 export default function ProductForm() {
@@ -40,6 +39,7 @@ export default function ProductForm() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [categories, setCategories] = useState([]);
   const { createProduct, updateProduct, findById } = useProduct();
+  const { fetchAll} = useOptionGroup();
 
   const [form, setForm] = useState({
     name: "",
@@ -50,7 +50,7 @@ export default function ProductForm() {
   });
 
   useEffect(() => {
-    setGroups(mockData);
+    // setGroups(mockData);
     setCategories(mockCategories);
 
     if (isEdit) {
@@ -70,6 +70,15 @@ export default function ProductForm() {
       };
 
       fetchData();
+    }else{
+      const fetchData = async () => {
+      const res = await fetchAll();
+      console.log("DATA:", res);
+
+      setGroups(res);
+    };
+
+    fetchData();
     }
   }, [id]);
 

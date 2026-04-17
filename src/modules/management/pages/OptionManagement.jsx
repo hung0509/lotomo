@@ -81,7 +81,7 @@ export default function OptionManagement() {
 
       toast.success("Tạo thành công");
 
-      setGroups((prev) => [...prev, res]);
+      setGroups((prev) => [...prev, newGroup]);
 
       setShowGroupModal(false);
       setNewGroup({ name: "", type: "SINGLE" });
