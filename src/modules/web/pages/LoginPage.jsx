@@ -18,7 +18,7 @@ export default function LoginPage() {
           password,
         });
 
-        navigate("/select-role"); 
+        navigate("/select-role");
       } catch (error) {
         alert("Sai tài khoản hoặc mật khẩu");
       }
@@ -26,6 +26,7 @@ export default function LoginPage() {
       alert("Vui lòng nhập đầy đủ thông tin");
     }
   };
+
   return (
     <div className="min-h-screen bg-[#038a42] flex justify-center items-center">
       {/* 📱 Mobile Frame */}

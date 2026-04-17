@@ -1,40 +1,49 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useMemo } from "react";
+import { useOrder } from "../../../hooks/useOrder";
 
 export default function OrderPage() {
-  const [order, setOrder] = useState([]);
+  const {updateOrder} = useOrder();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  useEffect(() => {
-    const data = localStorage.getItem("orders");
-
-    if (data) {
-      const parsed = JSON.parse(data);
-
-      // 👉 lấy order gần nhất
-      const latestOrder = parsed[parsed.length - 1];
-
-      if (latestOrder) {
-        const arr = latestOrder.items.map((item, index) => ({
-          key: index,
-          id: item.product.id,
-          name: item.product.name,
-          price: item.price,
-          qty: item.qty,
-          options: item.options || [],
-          total: item.total,
-        }));
-
-        setOrder(arr);
-      }
-    }
+  // 👉aw data từ page trước
+  const orderData = useMemo(() => {
+    return location.state || JSON.parse(localStorage.getItem("current_order"));
   }, []);
+  //  data để render UI
+  const items = useMemo(() => {
+    if (!orderData) return [];
 
-  const totalPrice = order.reduce((sum, item) => sum + item.total, 0);
+    return (orderData.items || []).map((item, index) => ({
+      key: index,
+      id: item.productId,
+      name: item.productName,
+      price: item.price,
+      qty: item.quantity,
+      total: item.total,
+      options: item.options
+        ? item.options.split(",").map((op) => ({ name: op.trim() }))
+        : [],
+    }));
+  }, [orderData]);
+
+  // 👉 tính tổng
+  const totalPrice = items.reduce((sum, item) => sum + item.total, 0);
 
   const now = new Date();
   const orderCode = "HD" + now.getTime();
+
+  // 👉 chống trắng UI
+  if (!orderData) {
+    return (
+      <div className="p-10 text-center text-red-500">
+        Không có dữ liệu đơn hàng
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center py-6">
@@ -65,20 +74,17 @@ export default function OrderPage() {
           <div className="border-t border-dashed my-2"></div>
 
           {/* List */}
-          {order.map((item) => (
+          {items.map((item) => (
             <div key={item.key} className="mb-2">
-              {/* Name + total */}
               <div className="flex justify-between">
                 <span>{item.name}</span>
                 <span>{item.total.toLocaleString()}đ</span>
               </div>
 
-              {/* Qty */}
               <div className="text-xs text-gray-500">
                 {item.qty} x {item.price.toLocaleString()}đ
               </div>
 
-              {/* Options */}
               {item.options.length > 0 && (
                 <div className="text-xs text-gray-400 ml-2">
                   + {item.options.map((op) => op.name).join(", ")}
@@ -97,22 +103,31 @@ export default function OrderPage() {
 
           <div className="border-t border-dashed my-2"></div>
 
-          {/* Footer */}
           <p className="text-center text-xs mt-2">Cảm ơn quý khách ❤️</p>
         </div>
 
         {/* Buttons */}
         <div className="mt-6 space-y-3">
           <button
-            onClick={() => window.print()}
+            onClick={async () =>{ 
+              await updateOrder({
+                orderId: orderData.orderId,
+                status: "PAID"
+              }); 
+              window.print()
+            }}
             className="w-full bg-[#038a42] text-white py-3 rounded-xl font-semibold"
           >
             In hóa đơn
           </button>
 
           <button
-            onClick={() => {
-              localStorage.removeItem("cart");
+            onClick={async () => {
+              await updateOrder({
+                orderId: orderData.orderId,
+                status: "PAID"
+              }); 
+              localStorage.removeItem("current_order");
               navigate("/");
             }}
             className="w-full border py-3 rounded-xl font-semibold"

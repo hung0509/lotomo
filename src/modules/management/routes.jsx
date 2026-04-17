@@ -4,6 +4,7 @@ import KitchenPage from "./pages/KitchenPage";
 import ProductManagement from "./pages/ProductManagement";
 import OptionManagement from "./pages/OptionManagement";
 import ProductForm from "./pages/ProductFrom";
+import OrderPage from "./pages/OrderPage";
 
 const AdminRoutes = (
   <>
@@ -13,6 +14,7 @@ const AdminRoutes = (
        <Route path="/admin/option" element={<OptionManagement />} />
        <Route path="/admin/product" element={<ProductForm />} />
        <Route path="/admin/product/edit/:id" element={<ProductForm />} />
+      <Route path="/admin/order" element={<OrderPage />} />
     </Route>
   </>
 );

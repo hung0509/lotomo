@@ -68,21 +68,18 @@ export default function POSScreen() {
 
   useEffect(() => {
     const fetchData = async () => {
-      // 👉 check localStorage trước
-      const cached = localStorage.getItem("products");
+      // // 👉 check localStorage trước
+      // const cached = localStorage.getItem("products");
 
-      if (cached) {
-        setProducts(JSON.parse(cached));
-        return; //có rồi thì không gọi API nữa
-      }
+      // if (cached) {
+      //   setProducts(JSON.parse(cached));
+      //   return; //có rồi thì không gọi API nữa
+      // }
 
       const res = await fetchForPos();
       console.log(res);
 
       setProducts(res);
-
-      //  lưu lại để lần sau dùng
-      localStorage.setItem("products", JSON.stringify(res));
     };
 
     fetchData();
@@ -101,7 +98,7 @@ export default function POSScreen() {
 
     setSelectedOptions((prev) => {
       if (group.type === "SINGLE") {
-        return {
+        return {  
           ...prev,
           [groupId]: item,
         };

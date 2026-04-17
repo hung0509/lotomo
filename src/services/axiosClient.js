@@ -11,15 +11,17 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("access_token");
-    const isWhitelisted = AUTH_WHITELIST.some((path) =>
-      config.url?.includes(path)
+
+    const isWhitelisted = AUTH_WHITELIST.some(
+      (item) =>
+        config.url?.includes(item.url) &&
+        config.method?.toUpperCase() === item.method
     );
 
     if (token && !isWhitelisted) {
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // Emit sự kiện start loading
     loadingEmitter.emit("start");
     return config;
   },

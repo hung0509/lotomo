@@ -2,9 +2,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Minus } from "lucide-react";
+import { useOrder } from "../../../hooks/useOrder";
 
 export default function ReviewOrder() {
   const [cart, setCart] = useState({});
+  const { createOrder } = useOrder();
   const navigate = useNavigate();
 
   // Load cart
@@ -56,34 +58,55 @@ export default function ReviewOrder() {
 
   const cartItems = Object.entries(cart);
 
-  // ✅ Tổng tiền chuẩn
-  const totalPrice = cartItems.reduce(
-    (sum, [, item]) => sum + item.total,
-    0
-  );
+  // Tổng tiền chuẩn
+  const totalPrice = cartItems.reduce((sum, [, item]) => sum + item.total, 0);
 
-  // Confirm
-  const handleConfirm = () => {
-    const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+  const handleConfirm = async () => {
+    try {
+      const orderRequest = transformOrder(cart);
 
-    const newOrder = {
-      id: Date.now(),
-      items: Object.values(cart),
-      createdAt: new Date().toLocaleTimeString(),
+      console.log("Request gửi BE:", orderRequest);
+
+      await createOrder(orderRequest);
+
+      localStorage.removeItem("cart");
+      setCart({}); 
+    } catch (err) {
+      console.error("Lỗi tạo order:", err);
+    }
+  };
+
+  const transformOrder = (cart) => {
+    const items = Object.values(cart);
+
+    const orderItems = items.map((item) => ({
+      productId: item.product.id,
+      productName: item.product.name,
+      basePrice: item.price,
+      quantity: item.qty,
+      totalPrice: item.total,
+
+      options: (item.options || []).map((opt) => ({
+        optionItemId: opt.id,
+        optionItemName: opt.name,
+        price: opt.price,
+      })),
+    }));
+
+    const totalAmount = orderItems.reduce(
+      (sum, item) => sum + item.totalPrice,
+      0,
+    );
+
+    return {
+      orderItems,
+      totalAmount,
     };
-
-    orders.unshift(newOrder);
-
-    localStorage.setItem("orders", JSON.stringify(orders));
-    localStorage.removeItem("cart");
-
-    navigate("/kitchen");
   };
 
   return (
     <div className="min-h-screen bg-[#038a42] flex justify-center py-6">
       <div className="w-full max-w-[420px] bg-white rounded-2xl shadow-lg p-4">
-
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <button
@@ -100,12 +123,9 @@ export default function ReviewOrder() {
         <div className="space-y-4">
           {cartItems.map(([key, item]) => (
             <div key={key} className="border-b pb-3">
-
               {/* Name + price */}
               <div className="flex justify-between items-center">
-                <span className="font-semibold">
-                  {item.product.name}
-                </span>
+                <span className="font-semibold">{item.product.name}</span>
 
                 <span className="text-[#038a42] font-bold">
                   {item.price.toLocaleString()}đ

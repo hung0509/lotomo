@@ -10,6 +10,7 @@ export const useAuth = () => {
       const data = await AuthenticationService.login(credentials);
       console.log(data);
       localStorage.setItem("access_token", data.result.token);
+      localStorage.setItem("firebase_token", data.result.firebaseToken);
       return data;
     } catch (err) {
       setError(err.message || "Login failed");

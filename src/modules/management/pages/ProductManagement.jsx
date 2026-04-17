@@ -4,6 +4,8 @@ import { Plus, Search, Pencil, Trash2, Menu } from "lucide-react";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { Link, useNavigate } from "react-router-dom";
 import { useProduct } from "../../../hooks/useProduct";
+import { initFirebaseAuth } from "../../../config/FirebaseAuth";
+
 
 export default function ProductManagement() {
   const [products, setProducts] = useState([]);
@@ -117,7 +119,7 @@ export default function ProductManagement() {
                 </button>
 
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     className="p-2 bg-blue-100 rounded-lg"
                     onClick={() => nagivate("/admin/product/edit/" + p.id)}
                   >
