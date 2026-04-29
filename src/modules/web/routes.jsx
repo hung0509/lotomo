@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Navigate, Route } from "react-router-dom";
 import Layout from "../../layouts/web/Layout";
 import WebHomePage from "./pages/WebHome";
 import POSScreen from "./pages/POSScreen";
