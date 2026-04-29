@@ -8,14 +8,7 @@ export default function AppRoutes() {
   return (
      <BrowserRouter>
       <Routes>
-        <Route
-          path="/*"
-          element={
-              <Routes>
-                {WebRoutes}
-              </Routes>
-          }
-        />
+        {WebRoutes}
         {AdminRoutes}
         {ManagementRoutes}
       </Routes>

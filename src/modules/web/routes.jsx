@@ -10,6 +10,7 @@ import ReviewOrder from "./pages/ReviewOrder";
 const WebRoutes = (
   <>
     <Route element={<Layout />}>
+       <Route path="/" element={<Navigate to="/home" />} /> 
        <Route path="/home" element={<WebHomePage />} />
        <Route path="/select-role" element={<SelectRolePage />} />
        <Route path="/pos" element={<POSScreen />} />
