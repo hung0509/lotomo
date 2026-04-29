@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { loadingEmitter } from "../utils/LoadingEmitter";
 
-
-
 export const useLoading = () => {
   const [loading, setLoading] = useState(false);
 
@@ -14,9 +12,10 @@ export const useLoading = () => {
     loadingEmitter.on("end", end);
 
     return () => {
-      // cleanup listeners
+      loadingEmitter.off("start", start);
+      loadingEmitter.off("end", end);
     };
   }, []);
 
-  return loading;
+  return { loading }; // ✅ QUAN TRỌNG
 };

@@ -99,6 +99,8 @@ export default function OptionManagement() {
         optionGroupId: selectedGroupId
     });
 
+    toast.success("Tạo thành công");
+
     setGroups((prev) =>
       prev.map((g) =>
         g.id === selectedGroupId

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Minus } from "lucide-react";
 import { useOrder } from "../../../hooks/useOrder";
+import toast from "react-hot-toast";
 
 export default function ReviewOrder() {
   const [cart, setCart] = useState({});
@@ -68,6 +69,7 @@ export default function ReviewOrder() {
       console.log("Request gửi BE:", orderRequest);
 
       await createOrder(orderRequest);
+      toast.success("Gọi món thành công");
 
       localStorage.removeItem("cart");
       setCart({}); 

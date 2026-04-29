@@ -8,6 +8,12 @@ class LoadingEmitter {
     this.listeners[event].push(callback);
   }
 
+  off(event, callback) {
+    this.listeners[event] = (this.listeners[event] || []).filter(
+      (cb) => cb !== callback
+    );
+  }
+
   emit(event) {
     (this.listeners[event] || []).forEach((cb) => cb());
   }

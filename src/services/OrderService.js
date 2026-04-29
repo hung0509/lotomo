@@ -31,6 +31,11 @@ export const OrderService = {
         return res.result;
     },
 
+    changeStatus: async (params) => {
+        const res = await OrderApi.changeStatus(params);
+        return res.result;
+    },
+
     fetchAll: async () => {
         const res = await OrderApi.fetchAll();
         return OrderService.mapOrders(res.result);

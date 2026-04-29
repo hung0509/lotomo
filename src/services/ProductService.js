@@ -21,29 +21,52 @@ export const ProductService = {
   },
 
   mapDetailToFe: (data) => {
+    // ✅ selected items
+    const selectedItems = data.options.flatMap(group =>
+      group.optionItems
+        .filter(item => item.isActive === "Y" || item.ingredients?.length > 0)
+        .map(item => item.optionItemId)
+    );
+
+    // ✅ options (convert về FE structure)
+    const options = data.options.map(group => ({
+      id: group.optionGroupId,
+      name: group.name,
+      items: group.optionItems.map(item => ({
+        id: item.optionItemId,
+        name: item.name,
+        price: item.price,
+      })),
+    }));
+
+    // ✅ recipes (QUAN TRỌNG NHẤT)
+    const recipes = {};
+    data.options.forEach(group => {
+      group.optionItems.forEach(item => {
+        if (item.ingredients?.length > 0) {
+          recipes[String(item.optionItemId)] = item.ingredients.map(i => ({
+            ingredientId: i.ingredientId,
+            quantity: i.quantity,
+          }));
+        }
+      });
+    });
+
     return {
       id: data.productId,
       name: data.name,
       price: data.basePrice,
+      image: data.imageUrl,
+      categoryId: data.categoryId,
       status: data.isActive === "Y" ? "ACTIVE" : "INACTIVE",
-      selectedItems: data.options.flatMap(group =>
-        group.optionItems
-          .filter(item => item.isActive === "Y")
-          .map(item => item.optionItemId)
-      ),
-      options: data.options.map(group => ({
-        id: group.optionGroupId,
-        name: group.name,
-        items: group.optionItems.map(item => ({
-          id: item.optionItemId,
-          name: item.name,
-          price: item.price,
-        })),
-      }))
-    }
+
+      selectedItems,
+      options,
+      recipes, // 🔥 thêm cái này
+    };
   },
 
-  mapData : (apiData) => {
+  mapData: (apiData) => {
     return apiData.map((p) => ({
       id: p.productId,
       name: p.name,

@@ -1,7 +1,8 @@
 import axios from "axios";
-
 import { API_BASE_URL, AUTH_WHITELIST } from "../utils/constant";
 import { loadingEmitter } from "../utils/LoadingEmitter";
+
+let requestCount = 0; 
 
 const axiosClient = axios.create({
   baseURL: API_BASE_URL,
@@ -22,22 +23,34 @@ axiosClient.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
+    // 
+    requestCount++;
     loadingEmitter.emit("start");
+
     return config;
   },
   (error) => {
-    loadingEmitter.emit("end");
+    //
+    requestCount = Math.max(0, requestCount - 1);
+    if (requestCount === 0) loadingEmitter.emit("end");
+
     return Promise.reject(error);
   }
 );
 
 axiosClient.interceptors.response.use(
   (response) => {
-    loadingEmitter.emit("end");
+    // 
+    requestCount = Math.max(0, requestCount - 1);
+    if (requestCount === 0) loadingEmitter.emit("end");
+
     return response.data;
   },
   (error) => {
-    loadingEmitter.emit("end");
+    // 
+    requestCount = Math.max(0, requestCount - 1);
+    if (requestCount === 0) loadingEmitter.emit("end");
+
     if (error.response) {
       const { status, data } = error.response;
       return Promise.reject({

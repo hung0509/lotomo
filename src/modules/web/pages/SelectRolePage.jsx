@@ -43,7 +43,7 @@ export default function SelectRolePage() {
 
           {/* Kitchen */}
           <div
-            onClick={() => navigate("/admin/kitchen")}
+            onClick={() => navigate("/manage/kitchen")}
             className="cursor-pointer bg-yellow-100 p-5 rounded-2xl flex items-center gap-4 hover:bg-yellow-200 transition active:scale-95"
           >
             <div className="w-12 h-12 bg-yellow-400 text-white flex items-center justify-center rounded-xl">

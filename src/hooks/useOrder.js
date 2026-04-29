@@ -26,6 +26,18 @@ export const useOrder = () => {
       }
     };
 
+     const changeStatus = async (params) => {
+      try {
+        const data = await OrderService.changeStatus(params);
+        
+        return data;
+      } catch (err) {
+        throw err;
+      } finally {
+        console.log("CALL API cap nhat hoa don...");
+      }
+    };
+
     const fectAllOrdersForToday = async () => {
       try {
         const data = await OrderService.fetchAll();
@@ -41,6 +53,7 @@ export const useOrder = () => {
   return {
     createOrder,
     updateOrder,
+    changeStatus,
     fectAllOrdersForToday
   };
 };

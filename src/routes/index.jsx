@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import WebRoutes from "../modules/web/routes";
-import AdminRoutes from "../modules/management/routes";
+import AdminRoutes from "../modules/admin/routes";
+import ManagementRoutes from "../modules/management/routes";
 
 
 export default function AppRoutes() {
@@ -16,6 +17,7 @@ export default function AppRoutes() {
           }
         />
         {AdminRoutes}
+        {ManagementRoutes}
       </Routes>
     </BrowserRouter>
   );

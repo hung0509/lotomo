@@ -10,6 +10,10 @@ export const OrderApi = {
   update: async (params) => {
     const res = await axiosClient.put(API_ENDPOINTS.ORDER, params);
     return res;
+  },  
+  changeStatus: async (params) => {
+    const res = await axiosClient.put(API_ENDPOINTS.CHANGE_STATUS_ORDER, params);
+    return res;
   },
   fetchAll: async () => {
     const res = await axiosClient.get(API_ENDPOINTS.ORDER);

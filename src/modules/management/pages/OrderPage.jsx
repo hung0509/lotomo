@@ -3,15 +3,52 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useMemo } from "react";
 import { useOrder } from "../../../hooks/useOrder";
+import toast from "react-hot-toast";
+
+const MOCK_ORDER = {
+  orderId: 999999,
+  items: [
+    {
+      productId: 1,
+      productName: "Cà phê sữa",
+      price: 25000,
+      quantity: 2,
+      total: 50000,
+      options: "Ít đá, thêm sữa",
+    },
+    {
+      productId: 2,
+      productName: "Trà đào",
+      price: 30000,
+      quantity: 1,
+      total: 30000,
+      options: "Không đường",
+    },
+    {
+      productId: 3,
+      productName: "Bánh mì",
+      price: 20000,
+      quantity: 1,
+      total: 20000,
+      options: "",
+    },
+  ],
+};
 
 export default function OrderPage() {
-  const {updateOrder} = useOrder();
+  const { updateOrder } = useOrder();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 👉aw data từ page trước
+  // aw data từ page trước
   const orderData = useMemo(() => {
-    return location.state || JSON.parse(localStorage.getItem("current_order"));
+    const data =
+      location.state || JSON.parse(localStorage.getItem("current_order"));
+
+      console.log(data);
+
+    //  fallback mock
+    return data || MOCK_ORDER;
   }, []);
   //  data để render UI
   const items = useMemo(() => {
@@ -30,13 +67,13 @@ export default function OrderPage() {
     }));
   }, [orderData]);
 
-  // 👉 tính tổng
+  // tính tổng
   const totalPrice = items.reduce((sum, item) => sum + item.total, 0);
 
   const now = new Date();
   const orderCode = "HD" + now.getTime();
 
-  // 👉 chống trắng UI
+  // chống trắng UI
   if (!orderData) {
     return (
       <div className="p-10 text-center text-red-500">
@@ -109,12 +146,12 @@ export default function OrderPage() {
         {/* Buttons */}
         <div className="mt-6 space-y-3">
           <button
-            onClick={async () =>{ 
+            onClick={async () => {
               await updateOrder({
                 orderId: orderData.orderId,
-                status: "PAID"
-              }); 
-              window.print()
+                status: "PAID",
+              });
+              window.print();
             }}
             className="w-full bg-[#038a42] text-white py-3 rounded-xl font-semibold"
           >
@@ -125,8 +162,9 @@ export default function OrderPage() {
             onClick={async () => {
               await updateOrder({
                 orderId: orderData.orderId,
-                status: "PAID"
-              }); 
+                status: "PAID",
+              });
+              toast.success("Đơn đã thanh toán thành công");
               localStorage.removeItem("current_order");
               navigate("/");
             }}

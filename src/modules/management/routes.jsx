@@ -1,22 +1,22 @@
 import { Route } from "react-router-dom";
-import Layout from "../../layouts/web/Layout";
 import KitchenPage from "./pages/KitchenPage";
-import ProductManagement from "./pages/ProductManagement";
-import OptionManagement from "./pages/OptionManagement";
-import ProductForm from "./pages/ProductFrom";
+import ProductManagement from "../admin/page/ProductManagement";
+import OptionManagement from "../admin/page/OptionManagement";
+import ProductForm from "../admin/page/ProductFrom";
 import OrderPage from "./pages/OrderPage";
+import AdminLayout from "../../layouts/manager/AdminLayout";
+import POSScreen from "./pages/POSScreen";
+import ShiftManagementPage from "../admin/page/ShiftManagementPage";
+import ShiftScheduleCalendar from "../admin/page/ShiftScheduleCalendar";
 
-const AdminRoutes = (
+const ManagementRoutes = (
   <>
-    <Route element={<Layout />}>
-       <Route path="/admin/kitchen" element={<KitchenPage />} />
-       <Route path="/admin" element={<ProductManagement />} />
-       <Route path="/admin/option" element={<OptionManagement />} />
-       <Route path="/admin/product" element={<ProductForm />} />
-       <Route path="/admin/product/edit/:id" element={<ProductForm />} />
-      <Route path="/admin/order" element={<OrderPage />} />
+    <Route element={<AdminLayout />}>
+       <Route path="/manage/kitchen" element={<KitchenPage />} />
+       <Route path="/manage/pos" element={<POSScreen />} />
+       <Route path="/manage/order" element={<OrderPage />} />
     </Route>
   </>
 );
 
-export default AdminRoutes;
+export default ManagementRoutes;

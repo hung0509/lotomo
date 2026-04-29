@@ -1,7 +1,5 @@
 import { useLoading } from "../../hooks/UseLoading";
 
-
-
 export default function LoadingOverlay() {
   const { loading } = useLoading();
 
