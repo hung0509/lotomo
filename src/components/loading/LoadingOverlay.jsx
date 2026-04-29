@@ -1,4 +1,5 @@
-import { useLoading } from "../../hooks/UseLoading";
+import { useLoading } from "../../hooks/useLoading";
+
 
 export default function LoadingOverlay() {
   const { loading } = useLoading();
