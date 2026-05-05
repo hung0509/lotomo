@@ -188,7 +188,7 @@ export default function ShiftScheduleCalendar() {
     <div className="min-h-screen bg-[#f4f6f5] flex">
       <Sidebar />
 
-      <div className="flex-1 flex justify-center py-4 px-2">
+      <div className="flex-1 flex justify-center">
         <div className="w-full bg-white rounded-2xl shadow-lg">
           {/* Header */}
           <div className="p-4 border-b flex justify-between items-center">

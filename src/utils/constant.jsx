@@ -1,4 +1,4 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://192.168.100.71:8443";
+export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8443";
 
 // Danh sách endpoint KHÔNG cần gắn token
 export const AUTH_WHITELIST = [

@@ -11,19 +11,27 @@ import Footer from "../../../components/footer/Footer";
 
 export default function WebHomePage() {
   return (
-    <div>
+    <div id="top">
       <div className="relative">
         <HeaderWeb />
         <SliderWeb />
       </div>
       <div>
-        <AboutSection />
-        <IntroductionSection />
-        {/* <ServiceSection />
-        <OutstandingSection />
-        <ProcessSection /> */}
-        <CTASection />
-        <ContactSection />
+        <section id="about">
+          <AboutSection />
+        </section>
+
+        <section id="intro">
+          <IntroductionSection />
+        </section>
+
+        <section id="cta">
+          <CTASection />
+        </section>
+
+        <section id="contact">
+          <ContactSection />
+        </section>
       </div>
 
       <div>

@@ -24,3 +24,7 @@ body {
     font-family: monospace;
   }
 }
+
+html {
+  scroll-behavior: smooth;
+}

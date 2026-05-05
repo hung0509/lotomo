@@ -40,9 +40,7 @@ const ACTIONS = {
     { label: "Hoàn thành", type: "PAID", className: "bg-[#038a42]" },
     { label: "Hủy đơn", type: "CANCELED", className: "bg-red-500" },
   ],
-  PAID: [
-    { label: "Xem chi tiết", type: "VIEW", className: "bg-gray-500" },
-  ],
+  PAID: [{ label: "Xem chi tiết", type: "VIEW", className: "bg-gray-500" }],
   CANCLED: [],
 };
 
@@ -229,25 +227,24 @@ export default function KitchenPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#038a42] flex justify-center">
-      <div className="w-full bg-[#f4f6f5] min-h-screen">
+    <div className="min-h-screen flex justify-center">
+      <div className="w-full max-w-[500px] bg-white rounded-2xl shadow-lg p-4">
         <div className="bg-white shadow-sm sticky top-0 z-10">
-          <div className="flex overflow-x-auto no-scrollbar px-2">
+          <div className="flex gap-2 px-3 py-2 overflow-x-auto no-scrollbar">
             {filters.map((f) => (
               <button
                 key={f.key}
                 onClick={() => setFilter(f.key)}
                 className={`
-                  px-4 py-3 text-sm whitespace-nowrap relative
-                  ${filter === f.key ? "text-[#038a42] font-semibold" : "text-gray-400"}
-                `}
+                px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition
+                ${
+                  filter === f.key
+                    ? "bg-[#038a42] text-white"
+                    : "bg-gray-100 text-gray-500"
+                }
+              `}
               >
                 {f.label}
-
-                {/* underline */}
-                {filter === f.key && (
-                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#038a42]" />
-                )}
               </button>
             ))}
           </div>
@@ -255,17 +252,7 @@ export default function KitchenPage() {
 
         <div className="max-w-[1400px] mx-auto">
           {/* List */}
-          <div
-            className="
-              p-4
-              grid gap-4
-              grid-cols-1
-              sm:grid-cols-2
-              lg:grid-cols-3
-              xl:grid-cols-4
-              2xl:grid-cols-5
-            "
-          >
+          <div className="p-4 space-y-4">
             {filteredOrders.map((order) => (
               <div
                 key={order.orderId}
@@ -356,10 +343,10 @@ export default function KitchenPage() {
                         }
 
                         // các action khác: chỉ update
-                          await changeStatus({
-                            orderId: order.orderId,
-                            status: action.type,
-                          });
+                        await changeStatus({
+                          orderId: order.orderId,
+                          status: action.type,
+                        });
 
                         // update state local (QUAN TRỌNG)
                         setOrders((prev) =>

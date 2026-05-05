@@ -86,9 +86,9 @@ export default function ShiftManagementPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f6f5] flex justify-center py-6">
+    <div className="min-h-screen bg-[#f4f6f5] flex justify-center">
       <Sidebar />
-      <div className="w-full max-w-[480px] bg-white rounded-2xl shadow-lg">
+      <div className="w-full bg-white rounded-2xl shadow-lg">
         {/* Header */}
         <div className="p-4 border-b flex justify-between items-center">
           <h1 className="text-lg font-bold text-[#038a42]">Quản lý ca</h1>
