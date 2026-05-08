@@ -58,6 +58,7 @@ export default function OrderPage() {
       key: index,
       id: item.productId,
       name: item.productName,
+      image: item.image,
       price: item.price,
       qty: item.quantity,
       total: item.total,
@@ -66,6 +67,8 @@ export default function OrderPage() {
         : [],
     }));
   }, [orderData]);
+
+  console.log(items);
 
   // tính tổng
   const totalPrice = items.reduce((sum, item) => sum + item.total, 0);
